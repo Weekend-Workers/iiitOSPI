@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <the-navbar :onLogin="login" :onLogout="logout" />
         <v-main>
             <router-view />
         </v-main>
@@ -8,6 +9,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import TheNavbar from './components/TheNavbar.vue';
 
 export default Vue.extend({
     name: 'App',
@@ -15,5 +17,17 @@ export default Vue.extend({
     data: () => ({
         //
     }),
+
+    components: {
+        TheNavbar,
+    },
+    methods: {
+        login() {
+            this.$store.dispatch('login');
+        },
+        logout() {
+            this.$store.dispatch('logout');
+        },
+    },
 });
 </script>

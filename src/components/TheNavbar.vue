@@ -3,6 +3,25 @@
         <v-app-bar>
             <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
             <v-toolbar-title>Searchbar</v-toolbar-title>
+            <v-spacer />
+            <v-btn
+                color="primary"
+                @click="onLogin"
+                :loading="authLoading"
+                :disabled="authLoading"
+                v-if="!authenticated"
+            >
+                Login
+            </v-btn>
+            <v-btn
+                color="primary"
+                @click="onLogout"
+                :loading="authLoading"
+                :disabled="authLoading"
+                v-if="authenticated"
+            >
+                Logout
+            </v-btn>
         </v-app-bar>
         <v-navigation-drawer v-model="drawer" absolute temporary>
             <v-list>
@@ -33,11 +52,29 @@
 </template>
 
 <script lang="ts">
-export default {
-    name: 'TheNavbar',
+import Vue, { PropType } from 'vue';
+import { mapState } from 'vuex';
 
+export default Vue.extend({
+    name: 'TheNavbar',
+    props: {
+        onLogin: {
+            type: Function as PropType<() => void>,
+            required: true,
+        },
+        onLogout: {
+            type: Function as PropType<() => void>,
+            required: true,
+        },
+    },
+    computed: {
+        ...mapState({
+            authLoading: 'authLoading',
+            authenticated: 'authenticated',
+        }),
+    },
     data: () => ({
         drawer: false,
     }),
-};
+});
 </script>

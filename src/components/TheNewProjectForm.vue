@@ -52,19 +52,22 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue';
+export default Vue.extend({
     name: 'TheNewProjectForm',
 
-    data: () => ({
-        current: 1,
-        valid: { link: false, nameAbout: false },
-        link: '',
-        linkRules: [(link: string) => !!link || 'Link is required'],
-        name: '',
-        nameRules: [(name: string) => !!name || 'Name is required'],
-        description: '',
-        readme: '',
-    }),
+    data() {
+        return {
+            current: 1,
+            valid: { link: false, nameAbout: false },
+            link: '',
+            linkRules: [(link: string) => !!link || 'Link is required'],
+            name: '',
+            nameRules: [(name: string) => !!name || 'Name is required'],
+            description: '',
+            readme: '',
+        };
+    },
 
     methods: {
         submitLink: function (e: any) {
@@ -83,5 +86,5 @@ export default {
             console.log('submit');
         },
     },
-};
+});
 </script>
