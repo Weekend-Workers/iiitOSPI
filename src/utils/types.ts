@@ -13,3 +13,8 @@ export interface Repo {
     link: string;
     topics: string[];
 }
+
+export type GithubRepoIndentifier = {
+    owner: string;
+    repo: string;
+};
