@@ -12,7 +12,12 @@
                     required
                 ></v-text-field>
             </v-form>
-            <v-btn :disabled="!valid.link" @click="submitLink">Continue</v-btn>
+            <v-btn
+                :disabled="!valid.link"
+                @click="submitLink"
+                :loading="continueLoading"
+                >Continue</v-btn
+            >
         </v-stepper-content>
 
         <v-stepper-step :complete="current > 2" step="2">
@@ -52,24 +57,40 @@
 </template>
 
 <script lang="ts">
-export default {
+import GithubAPI from '@/api/github';
+import Parsers from '@/utils/parsers';
+import Vue from 'vue';
+export default Vue.extend({
     name: 'TheNewProjectForm',
 
-    data: () => ({
-        current: 1,
-        valid: { link: false, nameAbout: false },
-        link: '',
-        linkRules: [(link: string) => !!link || 'Link is required'],
-        name: '',
-        nameRules: [(name: string) => !!name || 'Name is required'],
-        description: '',
-        readme: '',
-    }),
+    data() {
+        return {
+            current: 1,
+            valid: { link: false, nameAbout: false },
+            link: '',
+            linkRules: [(link: string) => !!link || 'Link is required'],
+            name: '',
+            nameRules: [(name: string) => !!name || 'Name is required'],
+            description: '',
+            readme: '',
+            continueLoading: false,
+        };
+    },
 
     methods: {
-        submitLink: function (e: any) {
+        submitLink: async function (e: any) {
             e.preventDefault();
             if (!this.valid.link) return;
+            const parsed = Parsers.parseRepoLink(this.link);
+            if (parsed) {
+                this.continueLoading = true;
+                const repo = await GithubAPI.getRepo(parsed);
+                this.name = repo.name || '';
+                this.description = repo.shortDes || '';
+                this.readme = repo.longDes || '';
+                this.continueLoading = false;
+            }
+
             this.current++;
         },
         submitNameAbout: function (e: any) {
@@ -83,5 +104,5 @@ export default {
             console.log('submit');
         },
     },
-};
+});
 </script>
