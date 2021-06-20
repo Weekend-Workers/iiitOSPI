@@ -1,6 +1,7 @@
 <template>
     <div>
         <button @click="login()" class="button">Log In</button>
+        <div>hi</div>
     </div>
 </template>
 
